@@ -309,6 +309,44 @@ public class InvokerPropertiesTest
     }
 
     @Test
+    public void testConfigureEnvironmentVariables() throws Exception
+    {
+        Properties props = new Properties();
+        InvokerProperties facade = new InvokerProperties( props );
+
+        props.setProperty( "invoker.abcdef", "abcdf" );
+        props.setProperty( "invoker.environmentVariables.KEY1.1", "value1.1" );
+        props.setProperty( "invoker.environmentVariables.KEY1", "value1" );
+        props.setProperty( "invoker.environmentVariables.KEY2", "value2" );
+        props.setProperty( "invoker.environmentVariables.KEY2.1", "value2.1" );
+        props.setProperty( "invoker.environmentVariables.KEY3", "value3" );
+        facade.configureInvocation( request, 0 );
+        verify( request ).addShellEnvironment( "KEY1", "value1" );
+        verify( request ).addShellEnvironment( "KEY2", "value2" );
+        verify( request ).addShellEnvironment( "KEY3", "value3" );
+        verifyNoMoreInteractions( request );
+    }
+
+    @Test
+    public void testConfigureEnvironmentVariablesWithIndex() throws Exception
+    {
+        Properties props = new Properties();
+        InvokerProperties facade = new InvokerProperties( props );
+
+        props.setProperty( "invoker.abcdef", "abcdf" );
+        props.setProperty( "invoker.environmentVariables.KEY1.1", "value1.1" );
+        props.setProperty( "invoker.environmentVariables.KEY1", "value1" );
+        props.setProperty( "invoker.environmentVariables.KEY2", "value2" );
+        props.setProperty( "invoker.environmentVariables.KEY2.1", "value2.1" );
+        props.setProperty( "invoker.environmentVariables.KEY3", "value3" );
+        facade.configureInvocation( request, 1 );
+        verify( request ).addShellEnvironment( "KEY1", "value1.1" );
+        verify( request ).addShellEnvironment( "KEY2", "value2.1" );
+        verify( request ).addShellEnvironment( "KEY3", "value3" );
+        verifyNoMoreInteractions( request );
+    }
+
+    @Test
     public void testIsInvocationDefined() throws Exception
     {
         Properties props = new Properties();
@@ -382,8 +420,8 @@ public class InvokerPropertiesTest
         assertNotNull( toolchains );
         assertEquals( 1, toolchains.size() );
         InvokerToolchain toolchain = toolchains.iterator().next();
-        assertEquals( "jdk", toolchain.getType());
-        assertEquals( Collections.singletonMap( "version", "11" ), toolchain.getProvides());
+        assertEquals( "jdk", toolchain.getType() );
+        assertEquals( Collections.singletonMap( "version", "11" ), toolchain.getProvides() );
     }
 
     @Test
@@ -394,12 +432,12 @@ public class InvokerPropertiesTest
         props.put( "selector.1.invoker.toolchain.jdk.version", "11" );
         InvokerProperties facade = new InvokerProperties( props );
 
-        Collection<InvokerToolchain> toolchains = facade.getToolchains(1);
+        Collection<InvokerToolchain> toolchains = facade.getToolchains( 1 );
         assertNotNull( toolchains );
         assertEquals( 1, toolchains.size() );
         InvokerToolchain toolchain = toolchains.iterator().next();
-        assertEquals( "jdk", toolchain.getType());
-        assertEquals( Collections.singletonMap( "version", "11" ), toolchain.getProvides());
+        assertEquals( "jdk", toolchain.getType() );
+        assertEquals( Collections.singletonMap( "version", "11" ), toolchain.getProvides() );
     }
 
 }

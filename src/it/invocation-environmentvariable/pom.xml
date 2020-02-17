@@ -46,6 +46,7 @@ under the License.
           </goals>
           <environmentVariables>
             <MINVOKER145>foobar</MINVOKER145>
+            <MINVOKER255_POM>minvoker255_pom</MINVOKER255_POM>
           </environmentVariables>
         </configuration>
         <executions>
